@@ -1,0 +1,119 @@
+.home {
+  .hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 100px 0;
+    text-align: center;
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero-content {
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        opacity: 0.9;
+      }
+
+      .btn-primary {
+        display: inline-block;
+        background: #fff;
+        color: #667eea;
+        padding: 15px 40px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: all 0.3s;
+
+        &:hover {
+          background: #f5f5f5;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
+  .featured {
+    padding: 80px 0;
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 50px;
+      color: #333;
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .featured-item {
+      text-align: center;
+      padding: 30px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      transition: transform 0.3s;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      .featured-image {
+        height: 200px;
+        background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      p {
+        color: #666;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .home {
+    .hero {
+      padding: 60px 0;
+
+      .hero-content {
+        h1 {
+          font-size: 2rem;
+        }
+
+        p {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .featured {
+      h2 {
+        font-size: 2rem;
+      }
+    }
+  }
+}

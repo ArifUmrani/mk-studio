@@ -9,51 +9,31 @@
         <h3>Filters</h3>
         <div class="filter-group">
           <h4>Category</h4>
-          <label><input type="checkbox"> Tops</label>
-          <label><input type="checkbox"> Bottoms</label>
-          <label><input type="checkbox"> Dresses</label>
-          <label><input type="checkbox"> Accessories</label>
+          <label *ngFor="let category of categories">
+            <input type="checkbox" [value]="category" (change)="onCategoryChange($event, category)"> {{ category }}
+          </label>
         </div>
         <div class="filter-group">
           <h4>Price Range</h4>
-          <label><input type="checkbox"> Under $50</label>
-          <label><input type="checkbox"> $50 - $100</label>
-          <label><input type="checkbox"> $100 - $200</label>
-          <label><input type="checkbox"> Over $200</label>
+          <label>
+            <input type="checkbox" value="under50" (change)="onPriceRangeChange($event, 'under50')"> Under $50
+          </label>
+          <label>
+            <input type="checkbox" value="50to100" (change)="onPriceRangeChange($event, '50to100')"> $50 - $100
+          </label>
+          <label>
+            <input type="checkbox" value="100to200" (change)="onPriceRangeChange($event, '100to200')"> $100 - $200
+          </label>
+          <label>
+            <input type="checkbox" value="over200" (change)="onPriceRangeChange($event, 'over200')"> Over $200
+          </label>
         </div>
+        <button class="btn btn-clear" (click)="clearFilters()">Clear Filters</button>
       </aside>
       <div class="products-grid">
-        <div class="product-card">
-          <div class="product-image"></div>
-          <div class="product-info">
-            <h3>Classic White Tee</h3>
-            <p class="product-price">$35.00</p>
-            <button class="btn btn-secondary">View Details</button>
-          </div>
-        </div>
-        <div class="product-card">
-          <div class="product-image"></div>
-          <div class="product-info">
-            <h3>Denim Jacket</h3>
-            <p class="product-price">$120.00</p>
-            <button class="btn btn-secondary">View Details</button>
-          </div>
-        </div>
-        <div class="product-card">
-          <div class="product-image"></div>
-          <div class="product-info">
-            <h3>Summer Dress</h3>
-            <p class="product-price">$85.00</p>
-            <button class="btn btn-secondary">View Details</button>
-          </div>
-        </div>
-        <div class="product-card">
-          <div class="product-image"></div>
-          <div class="product-info">
-            <h3>Chino Pants</h3>
-            <p class="product-price">$65.00</p>
-            <button class="btn btn-secondary">View Details</button>
-          </div>
+        <app-product-card *ngFor="let product of filteredProducts" [product]="product"></app-product-card>
+        <div *ngIf="filteredProducts.length === 0" class="no-products">
+          <p>No products found matching your filters.</p>
         </div>
       </div>
     </div>

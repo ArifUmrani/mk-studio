@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { ProductCardComponent } from './shared/components/product-card/product-card.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ShopComponent } from './pages/shop/shop.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
@@ -17,6 +19,7 @@ import { ContactComponent } from './pages/contact/contact.component';
     AppComponent,
     HeaderComponent,
     FooterComponent,
+    ProductCardComponent,
     HomeComponent,
     ShopComponent,
     ProductDetailsComponent,
@@ -26,7 +29,8 @@ import { ContactComponent } from './pages/contact/contact.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

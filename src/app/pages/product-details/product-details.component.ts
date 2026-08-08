@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { ProductService, Product } from '../../services/product.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-product-details',
@@ -13,10 +13,13 @@ export class ProductDetailsComponent implements OnInit {
   selectedSize: string = '';
   selectedColor: string = '';
   quantity: number = 1;
+  addToCartMessage: string = '';
+  showAddToCartMessage: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService
   ) { }
 
   ngOnInit(): void {
@@ -66,5 +69,51 @@ export class ProductDetailsComponent implements OnInit {
       'Print': '#9370db'
     };
     return colorMap[color] || color;
+  }
+
+  addToCart(): void {
+    if (!this.product) {
+      return;
+    }
+
+    if (this.quantity <= 0) {
+      this.showAddToCartMessage = true;
+      this.addToCartMessage = 'Please select a valid quantity.';
+      setTimeout(() => {
+        this.showAddToCartMessage = false;
+      }, 3000);
+      return;
+    }
+
+    if (this.product.sizes.length > 1 && !this.selectedSize) {
+      this.showAddToCartMessage = true;
+      this.addToCartMessage = 'Please select a size.';
+      setTimeout(() => {
+        this.showAddToCartMessage = false;
+      }, 3000);
+      return;
+    }
+
+    if (this.product.colors.length > 1 && !this.selectedColor) {
+      this.showAddToCartMessage = true;
+      this.addToCartMessage = 'Please select a color.';
+      setTimeout(() => {
+        this.showAddToCartMessage = false;
+      }, 3000);
+      return;
+    }
+
+    this.cartService.addToCart(
+      this.product,
+      this.selectedSize,
+      this.selectedColor,
+      this.quantity
+    );
+
+    this.showAddToCartMessage = true;
+    this.addToCartMessage = 'Product added to cart successfully!';
+    setTimeout(() => {
+      this.showAddToCartMessage = false;
+    }, 3000);
   }
 }

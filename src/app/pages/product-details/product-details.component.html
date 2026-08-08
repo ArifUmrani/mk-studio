@@ -39,8 +39,13 @@
           </div>
         </div>
         <div class="product-actions">
-          <button class="btn btn-primary">Add to Cart</button>
+          <button class="btn btn-primary" (click)="addToCart()">Add to Cart</button>
           <button class="btn btn-secondary">Add to Wishlist</button>
+        </div>
+        <div *ngIf="showAddToCartMessage" class="add-to-cart-message"
+          [class.success]="addToCartMessage.includes('successfully')"
+          [class.error]="!addToCartMessage.includes('successfully')">
+          {{ addToCartMessage }}
         </div>
       </div>
     </div>

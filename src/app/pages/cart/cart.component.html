@@ -1,50 +1,36 @@
 <div class="cart">
   <div class="container">
     <h1>Shopping Cart</h1>
-    <div class="cart-content">
+    <div class="cart-content" *ngIf="cartItems.length > 0; else emptyCart">
       <div class="cart-items">
-        <div class="cart-item">
-          <div class="item-image"></div>
+        <div class="cart-item" *ngFor="let item of cartItems; let i = index">
+          <div class="item-image" [style.background-image]="'url(' + item.product.image + ')'"></div>
           <div class="item-details">
-            <h3>Classic White Tee</h3>
-            <p class="item-size">Size: M</p>
-            <p class="item-color">Color: White</p>
-            <p class="item-price">$35.00</p>
+            <h3>{{ item.product.name }}</h3>
+            <p class="item-size">Size: {{ item.selectedSize }}</p>
+            <p class="item-color">Color: {{ item.selectedColor }}</p>
+            <p class="item-price">${{ item.product.price.toFixed(2) }}</p>
           </div>
           <div class="item-quantity">
-            <button class="qty-btn">-</button>
-            <span class="qty-value">1</span>
-            <button class="qty-btn">+</button>
+            <button class="qty-btn" (click)="decreaseQuantity(i)">-</button>
+            <span class="qty-value">{{ item.quantity }}</span>
+            <button class="qty-btn" (click)="increaseQuantity(i)">+</button>
           </div>
           <div class="item-total">
-            <p>$35.00</p>
-            <button class="remove-btn">Remove</button>
-          </div>
-        </div>
-        <div class="cart-item">
-          <div class="item-image"></div>
-          <div class="item-details">
-            <h3>Denim Jacket</h3>
-            <p class="item-size">Size: L</p>
-            <p class="item-color">Color: Blue</p>
-            <p class="item-price">$120.00</p>
-          </div>
-          <div class="item-quantity">
-            <button class="qty-btn">-</button>
-            <span class="qty-value">1</span>
-            <button class="qty-btn">+</button>
-          </div>
-          <div class="item-total">
-            <p>$120.00</p>
-            <button class="remove-btn">Remove</button>
+            <p>${{ (item.product.price * item.quantity).toFixed(2) }}</p>
+            <button class="remove-btn" (click)="removeItem(i)">Remove</button>
           </div>
         </div>
       </div>
       <div class="cart-summary">
         <h2>Order Summary</h2>
         <div class="summary-row">
+          <span>Total Items</span>
+          <span>{{ totalQuantity }}</span>
+        </div>
+        <div class="summary-row">
           <span>Subtotal</span>
-          <span>$155.00</span>
+          <span>${{ subtotal.toFixed(2) }}</span>
         </div>
         <div class="summary-row">
           <span>Shipping</span>
@@ -52,15 +38,26 @@
         </div>
         <div class="summary-row">
           <span>Tax</span>
-          <span>$15.50</span>
+          <span>${{ (subtotal * 0.1).toFixed(2) }}</span>
         </div>
         <div class="summary-row total">
           <span>Total</span>
-          <span>$180.50</span>
+          <span>${{ (subtotal + 10 + subtotal * 0.1).toFixed(2) }}</span>
         </div>
         <button class="btn btn-primary">Proceed to Checkout</button>
-        <button class="btn btn-secondary">Continue Shopping</button>
+        <button class="btn btn-secondary" routerLink="/shop">Continue Shopping</button>
+        <button class="btn btn-clear" (click)="clearCart()">Clear Cart</button>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #emptyCart>
+  <div class="container">
+    <div class="empty-cart">
+      <h1>Your Cart is Empty</h1>
+      <p>Add some items to get started!</p>
+      <button class="btn btn-primary" routerLink="/shop">Continue Shopping</button>
+    </div>
+  </div>
+</ng-template>

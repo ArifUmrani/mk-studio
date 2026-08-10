@@ -8,6 +8,15 @@ import { CartService } from '../../../services/cart.service';
 })
 export class HeaderComponent {
   cartCount$ = this.cartService.cartCount$;
+  mobileMenuOpen = false;
 
   constructor(private cartService: CartService) { }
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
+  }
 }

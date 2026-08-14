@@ -1,39 +1,61 @@
 <div class="shop">
   <div class="container">
-    <div class="shop-header">
+    <header class="shop-header">
+      <p class="shop-eyebrow">Collection</p>
       <h1>Shop</h1>
-      <p>Browse our collection</p>
-    </div>
+      <p class="shop-intro">Explore refined essentials curated for modern everyday wear.</p>
+    </header>
+
     <div class="shop-content">
       <aside class="filters">
-        <h3>Filters</h3>
+        <div class="filters-header">
+          <h3>Filters</h3>
+        </div>
+
         <div class="filter-group">
           <h4>Category</h4>
-          <label *ngFor="let category of categories">
-            <input type="checkbox" [value]="category" (change)="onCategoryChange($event, category)"> {{ category }}
+          <label class="filter-option" *ngFor="let category of categories">
+            <input type="checkbox" [value]="category" (change)="onCategoryChange($event, category)">
+            <span>{{ category }}</span>
           </label>
         </div>
+
         <div class="filter-group">
           <h4>Price Range</h4>
-          <label>
-            <input type="checkbox" value="under50" (change)="onPriceRangeChange($event, 'under50')"> Under $50
+          <label class="filter-option">
+            <input type="checkbox" value="under50" (change)="onPriceRangeChange($event, 'under50')">
+            <span>Under $50</span>
           </label>
-          <label>
-            <input type="checkbox" value="50to100" (change)="onPriceRangeChange($event, '50to100')"> $50 - $100
+          <label class="filter-option">
+            <input type="checkbox" value="50to100" (change)="onPriceRangeChange($event, '50to100')">
+            <span>$50 – $100</span>
           </label>
-          <label>
-            <input type="checkbox" value="100to200" (change)="onPriceRangeChange($event, '100to200')"> $100 - $200
+          <label class="filter-option">
+            <input type="checkbox" value="100to200" (change)="onPriceRangeChange($event, '100to200')">
+            <span>$100 – $200</span>
           </label>
-          <label>
-            <input type="checkbox" value="over200" (change)="onPriceRangeChange($event, 'over200')"> Over $200
+          <label class="filter-option">
+            <input type="checkbox" value="over200" (change)="onPriceRangeChange($event, 'over200')">
+            <span>Over $200</span>
           </label>
         </div>
-        <button class="btn btn-clear" (click)="clearFilters()">Clear Filters</button>
+
+        <button type="button" class="btn btn-clear" (click)="clearFilters()">Clear Filters</button>
       </aside>
-      <div class="products-grid">
-        <app-product-card *ngFor="let product of filteredProducts" [product]="product"></app-product-card>
-        <div *ngIf="filteredProducts.length === 0" class="no-products">
-          <p>No products found matching your filters.</p>
+
+      <div class="shop-results">
+        <div class="results-meta" *ngIf="filteredProducts.length > 0">
+          <p>{{ filteredProducts.length }} {{ filteredProducts.length === 1 ? 'piece' : 'pieces' }}</p>
+        </div>
+
+        <div class="products-grid" *ngIf="filteredProducts.length > 0">
+          <app-product-card *ngFor="let product of filteredProducts" [product]="product"></app-product-card>
+        </div>
+
+        <div class="no-products" *ngIf="filteredProducts.length === 0">
+          <h2>No matches found</h2>
+          <p>Try adjusting your category or price filters to explore more of the collection.</p>
+          <button type="button" class="btn btn-secondary" (click)="clearFilters()">Clear Filters</button>
         </div>
       </div>
     </div>

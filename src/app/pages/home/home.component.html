@@ -1,19 +1,89 @@
 <div class="home">
   <section class="hero">
-    <div class="container">
+    <div
+      class="hero-media"
+      style="background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1800&h=1200&fit=crop')"
+      role="img"
+      aria-label="MK Studio fashion collection"
+    ></div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-inner">
       <div class="hero-content">
-        <h1>Welcome to MK Studio</h1>
-        <p>Discover our latest collection of modern, high-quality clothing designed for the contemporary lifestyle.</p>
-        <a routerLink="/shop" class="btn btn-primary">Shop Now</a>
+        <h1 class="hero-brand">MK Studio</h1>
+        <p class="hero-text">
+          Modern clothing, quietly refined—elevated essentials for contemporary living.
+        </p>
+        <a routerLink="/shop" class="btn btn-primary hero-cta">Shop Collection</a>
       </div>
     </div>
   </section>
 
   <section class="featured">
     <div class="container">
-      <h2>Featured Collection</h2>
-      <div class="featured-grid">
-        <app-product-card *ngFor="let product of featuredProducts" [product]="product"></app-product-card>
+      <div class="featured-header">
+        <div class="featured-intro">
+          <h2>Featured Collection</h2>
+          <p>A curated selection from the season’s defining pieces.</p>
+        </div>
+        <div class="carousel-controls" *ngIf="featuredProducts.length > itemsPerView">
+          <button
+            type="button"
+            class="carousel-btn"
+            (click)="prev()"
+            [disabled]="currentIndex === 0"
+            aria-label="Previous products"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            class="carousel-btn"
+            (click)="next()"
+            [disabled]="currentIndex >= maxIndex"
+            aria-label="Next products"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      <div class="carousel" *ngIf="featuredProducts.length > 0">
+        <div class="carousel-viewport">
+          <div class="carousel-track" [style.transform]="trackTransform">
+            <div
+              class="carousel-slide"
+              *ngFor="let product of featuredProducts"
+              [style.flex-basis]="slideFlexBasis"
+            >
+              <app-product-card [product]="product"></app-product-card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="collection-cta">
+    <div class="container">
+      <div class="collection-cta-content">
+        <h2>Explore the Full Collection</h2>
+        <p>Discover refined silhouettes and everyday essentials across the complete MK Studio range.</p>
+        <a routerLink="/shop" class="btn btn-primary">Shop Collection</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="brand-values">
+    <div class="container">
+      <div class="values-header">
+        <h2>What Defines Us</h2>
+        <p>Principles that shape every MK Studio piece.</p>
+      </div>
+      <div class="values-grid">
+        <div class="value-item" *ngFor="let value of brandValues">
+          <h3>{{ value.title }}</h3>
+          <p>{{ value.description }}</p>
+        </div>
       </div>
     </div>
   </section>

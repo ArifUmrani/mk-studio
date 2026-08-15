@@ -12,7 +12,7 @@
       <div class="product-info">
         <h1>{{ product.name }}</h1>
         <p class="product-category">{{ product.category }}</p>
-        <p class="product-price">${{ product.price.toFixed(2) }}</p>
+        <p class="product-price">Rs. {{ product.price.toLocaleString('en-PK') }}</p>
         <p class="product-description">{{ product.description }}</p>
         <div class="product-options">
           <div class="size-selector">

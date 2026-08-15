@@ -1,19 +1,21 @@
 <div class="home">
   <section class="hero">
-    <div
-      class="hero-media"
-      style="background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1800&h=1200&fit=crop')"
-      role="img"
-      aria-label="MK Studio fashion collection"
-    ></div>
-    <div class="hero-overlay"></div>
-    <div class="container hero-inner">
-      <div class="hero-content">
-        <h1 class="hero-brand">MK Studio</h1>
-        <p class="hero-text">
-          Modern clothing, quietly refined—elevated essentials for contemporary living.
-        </p>
-        <a routerLink="/shop" class="btn btn-primary hero-cta">Shop Collection</a>
+    <div class="hero-panel">
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <h1 class="hero-brand-mark">MK Studio</h1>
+          <p class="hero-tagline">Elegance in Every Thread</p>
+          <p class="hero-text">
+            Premium Pakistani eastern wear—lawn suits, embroidered sets, and pret pieces for the modern woman.
+          </p>
+          <a routerLink="/shop" class="btn btn-primary hero-cta">Shop Collection</a>
+        </div>
+        <div
+          class="hero-visual"
+          role="img"
+          aria-label="MK Studio boutique brand"
+          style="background-image: url('assets/brand/mk-studio-logo.png')"
+        ></div>
       </div>
     </div>
   </section>
@@ -22,39 +24,20 @@
     <div class="container">
       <div class="featured-header">
         <div class="featured-intro">
+          <p class="section-eyebrow">Curated</p>
           <h2>Featured Collection</h2>
-          <p>A curated selection from the season’s defining pieces.</p>
+          <p>A selection of season-defining Pakistani eastern pieces.</p>
         </div>
         <div class="carousel-controls" *ngIf="featuredProducts.length > itemsPerView">
-          <button
-            type="button"
-            class="carousel-btn"
-            (click)="prev()"
-            [disabled]="currentIndex === 0"
-            aria-label="Previous products"
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            class="carousel-btn"
-            (click)="next()"
-            [disabled]="currentIndex >= maxIndex"
-            aria-label="Next products"
-          >
-            Next
-          </button>
+          <button type="button" class="carousel-btn" (click)="prev()" [disabled]="currentIndex === 0" aria-label="Previous products">Previous</button>
+          <button type="button" class="carousel-btn" (click)="next()" [disabled]="currentIndex >= maxIndex" aria-label="Next products">Next</button>
         </div>
       </div>
 
       <div class="carousel" *ngIf="featuredProducts.length > 0">
         <div class="carousel-viewport">
           <div class="carousel-track" [style.transform]="trackTransform">
-            <div
-              class="carousel-slide"
-              *ngFor="let product of featuredProducts"
-              [style.flex-basis]="slideFlexBasis"
-            >
+            <div class="carousel-slide" *ngFor="let product of featuredProducts" [style.flex-basis]="slideFlexBasis">
               <app-product-card [product]="product"></app-product-card>
             </div>
           </div>
@@ -66,8 +49,9 @@
   <section class="collection-cta">
     <div class="container">
       <div class="collection-cta-content">
-        <h2>Explore the Full Collection</h2>
-        <p>Discover refined silhouettes and everyday essentials across the complete MK Studio range.</p>
+        <p class="section-eyebrow">Collection</p>
+        <h2>Explore the Full Range</h2>
+        <p>Discover lawn, embroidered, and formal eastern wear across the complete MK Studio collection.</p>
         <a routerLink="/shop" class="btn btn-primary">Shop Collection</a>
       </div>
     </div>
@@ -76,8 +60,9 @@
   <section class="brand-values">
     <div class="container">
       <div class="values-header">
+        <p class="section-eyebrow">Our Promise</p>
         <h2>What Defines Us</h2>
-        <p>Principles that shape every MK Studio piece.</p>
+        <p>Principles woven into every MK Studio piece.</p>
       </div>
       <div class="values-grid">
         <div class="value-item" *ngFor="let value of brandValues">

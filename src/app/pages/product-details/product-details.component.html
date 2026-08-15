@@ -2,11 +2,19 @@
   <div class="container">
     <div class="product-details-content">
       <div class="product-gallery">
-        <div class="main-image" [style.background-image]="'url(' + product.image + ')'"></div>
+        <div class="main-image-stage">
+          <div class="main-image" [style.background-image]="'url(' + product.image + ')'"></div>
+        </div>
         <div class="thumbnail-images">
-          <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
-          <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
-          <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
+          <div class="thumbnail-stage">
+            <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
+          </div>
+          <div class="thumbnail-stage">
+            <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
+          </div>
+          <div class="thumbnail-stage">
+            <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
+          </div>
         </div>
       </div>
       <div class="product-info">

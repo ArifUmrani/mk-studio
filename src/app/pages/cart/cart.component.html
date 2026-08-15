@@ -34,17 +34,17 @@
         </div>
         <div class="summary-row">
           <span>Shipping</span>
-          <span>Rs. 250</span>
+          <span>Rs. {{ shipping.toLocaleString('en-PK') }}</span>
         </div>
         <div class="summary-row">
           <span>Tax</span>
-          <span>Rs. {{ (subtotal * 0.1).toLocaleString('en-PK') }}</span>
+          <span>Rs. {{ tax.toLocaleString('en-PK') }}</span>
         </div>
         <div class="summary-row total">
           <span>Total</span>
-          <span>Rs. {{ (subtotal + 250 + subtotal * 0.1).toLocaleString('en-PK') }}</span>
+          <span>Rs. {{ total.toLocaleString('en-PK') }}</span>
         </div>
-        <button class="btn btn-primary">Proceed to Checkout</button>
+        <a routerLink="/checkout" class="btn btn-primary">Proceed to Checkout</a>
         <button class="btn btn-secondary" routerLink="/shop">Continue Shopping</button>
         <button class="btn btn-clear" (click)="clearCart()">Clear Cart</button>
       </div>

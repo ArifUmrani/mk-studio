@@ -9,6 +9,9 @@ import { CartService, CartItem } from '../../services/cart.service';
 export class CartComponent implements OnInit {
   cartItems: CartItem[] = [];
   subtotal: number = 0;
+  shipping: number = 0;
+  tax: number = 0;
+  total: number = 0;
   totalQuantity: number = 0;
 
   constructor(private cartService: CartService) { }
@@ -17,14 +20,20 @@ export class CartComponent implements OnInit {
     this.loadCart();
     this.cartService.cartItems$.subscribe((items: CartItem[]) => {
       this.cartItems = items;
-      this.subtotal = this.cartService.getSubtotal();
-      this.totalQuantity = this.cartService.getTotalQuantity();
+      this.refreshTotals();
     });
   }
 
   loadCart(): void {
     this.cartItems = this.cartService.getCartItems();
+    this.refreshTotals();
+  }
+
+  private refreshTotals(): void {
     this.subtotal = this.cartService.getSubtotal();
+    this.shipping = this.cartService.getShippingFee();
+    this.tax = this.cartService.getTax();
+    this.total = this.cartService.getTotal();
     this.totalQuantity = this.cartService.getTotalQuantity();
   }
 

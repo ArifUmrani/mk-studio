@@ -1,7 +1,10 @@
 <header class="header">
   <div class="container">
     <div class="header-content">
-      <a routerLink="/" class="logo" (click)="closeMobileMenu()">MK Studio</a>
+      <a routerLink="/" class="logo" (click)="closeMobileMenu()" aria-label="MK Studio home">
+        <span class="logo-mk">MK</span>
+        <span class="logo-studio">Studio</span>
+      </a>
 
       <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Toggle menu">
         <span class="hamburger" [class.open]="mobileMenuOpen">
@@ -12,7 +15,7 @@
       </button>
 
       <nav class="nav" [class.mobile-open]="mobileMenuOpen">
-        <a routerLink="/" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Home</a>
+        <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">Home</a>
         <a routerLink="/shop" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Shop</a>
         <a routerLink="/about" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">About</a>
         <a routerLink="/contact" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Contact</a>

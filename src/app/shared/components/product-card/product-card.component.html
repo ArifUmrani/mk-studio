@@ -3,7 +3,7 @@
   <div class="product-info">
     <h3>{{ product.name }}</h3>
     <p class="product-category">{{ product.category }}</p>
-    <p class="product-price">${{ product.price.toFixed(2) }}</p>
+    <p class="product-price">Rs. {{ product.price.toLocaleString('en-PK') }}</p>
     <button class="btn btn-secondary" [routerLink]="['/product', product.id]">View Details</button>
   </div>
 </div>

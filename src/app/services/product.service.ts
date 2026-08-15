@@ -18,123 +18,123 @@ export class ProductService {
   private products: Product[] = [
     {
       id: 1,
-      name: 'Classic White Tee',
-      price: 35.00,
-      category: 'Tops',
-      description: 'A classic white t-shirt made from 100% organic cotton. Perfect for everyday wear.',
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=500&fit=crop',
+      name: 'Floral Printed Lawn 2-Piece Suit',
+      price: 2790,
+      category: 'Lawn Suits',
+      description: 'Lightweight printed lawn shirt with matching shalwar. Soft, breathable fabric ideal for everyday summer wear.',
+      image: 'https://images.pexels.com/photos/20690539/pexels-photo-20690539.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
       sizes: ['XS', 'S', 'M', 'L', 'XL'],
-      colors: ['White', 'Black', 'Gray']
+      colors: ['Ivory', 'Peach', 'Sky Blue']
     },
     {
       id: 2,
-      name: 'Denim Jacket',
-      price: 120.00,
-      category: 'Outerwear',
-      description: 'A timeless denim jacket with a modern fit. Features classic styling with premium quality denim.',
-      image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&h=500&fit=crop',
+      name: 'Embroidered Lawn 3-Piece Suit',
+      price: 3890,
+      category: 'Lawn Suits',
+      description: 'Premium lawn suit with delicate front embroidery, dyed shalwar, and a matching chiffon dupatta.',
+      image: 'https://images.pexels.com/photos/31323212/pexels-photo-31323212.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
       sizes: ['S', 'M', 'L', 'XL'],
-      colors: ['Blue', 'Black']
+      colors: ['White', 'Mint', 'Lilac']
     },
     {
       id: 3,
-      name: 'Summer Dress',
-      price: 85.00,
-      category: 'Dresses',
-      description: 'A beautiful summer dress made from lightweight, breathable fabric. Perfect for warm weather.',
-      image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&h=500&fit=crop',
+      name: 'Resham Embroidered Kurta Set',
+      price: 3450,
+      category: 'Kurta Sets',
+      description: 'Elegant resham-embroidered kurta paired with straight pants. A refined choice for daytime gatherings.',
+      image: 'https://images.pexels.com/photos/25184999/pexels-photo-25184999.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
       sizes: ['XS', 'S', 'M', 'L'],
-      colors: ['Floral', 'Solid Blue', 'White']
+      colors: ['Cream', 'Powder Pink', 'Sea Green']
     },
     {
       id: 4,
-      name: 'Chino Pants',
-      price: 65.00,
-      category: 'Bottoms',
-      description: 'Versatile chino pants that work for both casual and formal occasions. Comfortable and stylish.',
-      image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=500&h=500&fit=crop',
-      sizes: ['28', '30', '32', '34', '36'],
-      colors: ['Khaki', 'Navy', 'Black', 'Olive']
+      name: 'Cotton Pret Kurta with Shalwar',
+      price: 2500,
+      category: 'Kurta Sets',
+      description: 'Simple cotton pret kurta with comfortable shalwar. Easy everyday Pakistani eastern wear with a clean silhouette.',
+      image: 'https://images.pexels.com/photos/31874448/pexels-photo-31874448.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
+      sizes: ['S', 'M', 'L', 'XL'],
+      colors: ['Beige', 'Black', 'Navy']
     },
     {
       id: 5,
-      name: 'Wool Sweater',
-      price: 95.00,
-      category: 'Tops',
-      description: 'Cozy wool sweater perfect for cooler weather. Made from premium merino wool.',
-      image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500&h=500&fit=crop',
-      sizes: ['S', 'M', 'L', 'XL'],
-      colors: ['Gray', 'Navy', 'Cream', 'Burgundy']
+      name: 'Mirror Work Embroidered 2-Piece Suit',
+      price: 3650,
+      category: 'Embroidered Suits',
+      description: 'Statement 2-piece suit featuring traditional mirror work embroidery on a soft, flowing silhouette.',
+      image: 'https://images.pexels.com/photos/25184952/pexels-photo-25184952.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
+      sizes: ['XS', 'S', 'M', 'L', 'XL'],
+      colors: ['Maroon', 'Mustard', 'Teal']
     },
     {
       id: 6,
-      name: 'Leather Belt',
-      price: 45.00,
-      category: 'Accessories',
-      description: 'High-quality leather belt with a classic buckle. A wardrobe essential.',
-      image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&h=500&fit=crop',
+      name: 'Organza Embroidered Formal 3-Piece',
+      price: 4500,
+      category: 'Formal Wear',
+      description: 'Luxurious organza formal suit with intricate embroidery, coordinated shalwar, and an airy dupatta.',
+      image: 'https://images.pexels.com/photos/35485430/pexels-photo-35485430.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
       sizes: ['S', 'M', 'L'],
-      colors: ['Brown', 'Black']
+      colors: ['Gold', 'Wine', 'Bottle Green']
     },
     {
       id: 7,
-      name: 'Canvas Sneakers',
-      price: 55.00,
-      category: 'Footwear',
-      description: 'Comfortable canvas sneakers with a classic design. Perfect for everyday wear.',
-      image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&h=500&fit=crop',
-      sizes: ['7', '8', '9', '10', '11', '12'],
-      colors: ['White', 'Black', 'Navy']
+      name: 'Digital Print Lawn Summer Suit',
+      price: 2950,
+      category: 'Lawn Suits',
+      description: 'Vibrant digital-print lawn suit designed for warm weather. Light fabric with a modern Pakistani cut.',
+      image: 'https://images.pexels.com/photos/20690524/pexels-photo-20690524.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
+      sizes: ['XS', 'S', 'M', 'L', 'XL'],
+      colors: ['Yellow', 'Coral', 'Aqua']
     },
     {
       id: 8,
-      name: 'Silk Scarf',
-      price: 40.00,
-      category: 'Accessories',
-      description: 'Elegant silk scarf that adds a touch of sophistication to any outfit.',
-      image: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=500&h=500&fit=crop',
-      sizes: ['One Size'],
-      colors: ['Red', 'Blue', 'Print', 'Black']
+      name: 'Silk Blend Embroidered Kurta Set',
+      price: 4200,
+      category: 'Kurta Sets',
+      description: 'Rich silk-blend kurta with subtle embroidery and matching pants. Perfect for festive evenings.',
+      image: 'https://images.pexels.com/photos/25184935/pexels-photo-25184935.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
+      sizes: ['S', 'M', 'L', 'XL'],
+      colors: ['Ivory', 'Burgundy', 'Emerald']
     },
     {
       id: 9,
-      name: 'Linen Blazer',
-      price: 145.00,
-      category: 'Outerwear',
-      description: 'Lightweight linen blazer perfect for summer occasions. Breathable and stylish.',
-      image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500&h=500&fit=crop',
+      name: 'Karandi Embroidered Winter Suit',
+      price: 3350,
+      category: 'Embroidered Suits',
+      description: 'Warm karandi fabric suit with classic embroidery. A graceful option for cooler-season occasions.',
+      image: 'https://images.pexels.com/photos/35485419/pexels-photo-35485419.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
       sizes: ['S', 'M', 'L', 'XL'],
-      colors: ['Beige', 'Navy', 'White']
+      colors: ['Rust', 'Charcoal', 'Deep Blue']
     },
     {
       id: 10,
-      name: 'Skinny Jeans',
-      price: 75.00,
-      category: 'Bottoms',
-      description: 'Classic skinny jeans with stretch comfort. A wardrobe staple for modern style.',
-      image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=500&h=500&fit=crop',
-      sizes: ['26', '28', '30', '32', '34'],
-      colors: ['Black', 'Blue', 'Gray']
+      name: 'Chiffon Embroidered Party Suit',
+      price: 4350,
+      category: 'Formal Wear',
+      description: 'Flowing chiffon party suit with refined embroidery and a soft dupatta for evening events.',
+      image: 'https://images.pexels.com/photos/25184996/pexels-photo-25184996.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
+      sizes: ['XS', 'S', 'M', 'L'],
+      colors: ['Rose', 'Black', 'Silver Grey']
     },
     {
       id: 11,
-      name: 'Cotton Hoodie',
-      price: 55.00,
-      category: 'Tops',
-      description: 'Comfortable cotton hoodie perfect for casual wear. Soft and warm.',
-      image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=500&fit=crop',
+      name: 'Jacquard 2-Piece Pret Suit',
+      price: 3100,
+      category: 'Pret Wear',
+      description: 'Textured jacquard 2-piece pret suit with a tailored fit. Ready-to-wear elegance for daily polish.',
+      image: 'https://images.pexels.com/photos/20690517/pexels-photo-20690517.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
       sizes: ['S', 'M', 'L', 'XL'],
-      colors: ['Black', 'Gray', 'Navy', 'Green']
+      colors: ['Fawn', 'Olive', 'Plum']
     },
     {
       id: 12,
-      name: 'Leather Wallet',
-      price: 35.00,
-      category: 'Accessories',
-      description: 'Slim leather wallet with multiple card slots. Crafted from genuine leather.',
-      image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&h=500&fit=crop',
-      sizes: ['One Size'],
-      colors: ['Brown', 'Black', 'Tan']
+      name: 'Hand Embroidered Khaddar Suit',
+      price: 3550,
+      category: 'Embroidered Suits',
+      description: 'Hand-embroidered khaddar suit with traditional detailing. Comfortable eastern wear with artisanal finish.',
+      image: 'https://images.pexels.com/photos/20777172/pexels-photo-20777172.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
+      sizes: ['XS', 'S', 'M', 'L', 'XL'],
+      colors: ['Cream', 'Mehndi', 'Brick Red']
     }
   ];
 
@@ -163,10 +163,10 @@ export class ProductService {
   private checkPriceRange(price: number, priceRanges: string[]): boolean {
     return priceRanges.some(range => {
       switch (range) {
-        case 'under50': return price < 50;
-        case '50to100': return price >= 50 && price < 100;
-        case '100to200': return price >= 100 && price < 200;
-        case 'over200': return price >= 200;
+        case 'under3000': return price < 3000;
+        case '3000to3500': return price >= 3000 && price < 3500;
+        case '3500to4000': return price >= 3500 && price < 4000;
+        case 'over4000': return price >= 4000;
         default: return false;
       }
     });

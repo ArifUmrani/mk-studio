@@ -11,6 +11,18 @@
   margin-bottom: var(--spacing-xl);
 }
 
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.load-error {
+  margin: 0 0 var(--spacing-md);
+  color: var(--color-error);
+  font-size: 0.92rem;
+}
+
 .eyebrow {
   margin: 0 0 var(--spacing-xs);
   font-size: 0.72rem;

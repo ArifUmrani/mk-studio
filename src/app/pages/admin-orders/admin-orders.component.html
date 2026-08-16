@@ -9,16 +9,39 @@
           <span *ngIf="newOrdersCount > 0"> · {{ newOrdersCount }} new</span>
         </p>
       </div>
-      <button type="button" class="btn btn-secondary" (click)="logout()">Logout</button>
+      <div class="admin-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="refreshOrders()"
+          [disabled]="loading"
+        >
+          {{ loading ? 'Refreshing…' : 'Refresh' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="logout()">Logout</button>
+      </div>
     </header>
 
-    <div class="empty-state" *ngIf="orders.length === 0; else ordersLayout">
+    <p class="load-error" *ngIf="actionError">{{ actionError }}</p>
+
+    <div class="empty-state" *ngIf="loading">
+      <h2>Loading orders…</h2>
+      <p>Fetching the latest COD orders from Supabase.</p>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && loadError">
+      <h2>Orders unavailable</h2>
+      <p>{{ loadError }}</p>
+      <button type="button" class="btn btn-primary" (click)="refreshOrders()">Try again</button>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !loadError && orders.length === 0">
       <h2>No orders yet</h2>
       <p>When customers place COD orders, they will appear here.</p>
       <a routerLink="/shop" class="btn btn-primary">Go to Shop</a>
     </div>
 
-    <ng-template #ordersLayout>
+    <ng-container *ngIf="!loading && !loadError && orders.length > 0">
       <div class="toolbar">
         <input
           type="search"
@@ -61,14 +84,12 @@
                 </span>
               </div>
               <p>{{ order.customer.fullName }} · {{ order.customer.city }}</p>
-              <p class="order-meta">
-                Rs. {{ order.total.toLocaleString('en-PK') }} · {{ formatDate(order.createdAt) }}
-              </p>
+              <p class="muted">Rs. {{ order.total.toLocaleString('en-PK') }} · {{ formatDate(order.createdAt) }}</p>
             </button>
           </aside>
 
           <section class="order-detail" *ngIf="selectedOrder; else pickOrder">
-            <div class="detail-header">
+            <div class="detail-top">
               <div>
                 <h2>{{ selectedOrder.id }}</h2>
                 <p>{{ formatDate(selectedOrder.createdAt) }}</p>
@@ -80,6 +101,7 @@
                 <select
                   id="statusSelect"
                   [ngModel]="selectedOrder.status"
+                  [disabled]="updatingOrderId === selectedOrder.id"
                   (change)="onStatusChange(selectedOrder.id, $event)"
                 >
                   <option *ngFor="let status of statusOptions" [value]="status">
@@ -143,6 +165,6 @@
           </ng-template>
         </div>
       </ng-template>
-    </ng-template>
+    </ng-container>
   </div>
 </div>

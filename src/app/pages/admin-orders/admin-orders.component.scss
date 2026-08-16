@@ -28,6 +28,28 @@
   border: 1px solid var(--color-border);
 }
 
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 12px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.search-input,
+.status-filter {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-family: var(--font-family-base);
+  font-size: 0.92rem;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+}
+
 .orders-layout {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
@@ -181,9 +203,38 @@
   margin-top: var(--spacing-md);
 }
 
+.link-btn {
+  margin-top: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-accent-dark);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.copy-message {
+  margin-top: 4px !important;
+  font-size: 0.8rem !important;
+  color: var(--color-success) !important;
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: var(--spacing-md);
+
+  .btn {
+    margin-top: 0;
+  }
+}
+
 @media (max-width: 900px) {
   .orders-layout,
-  .detail-grid {
+  .detail-grid,
+  .toolbar {
     grid-template-columns: 1fr;
   }
 

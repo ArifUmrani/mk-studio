@@ -20,7 +20,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   orderPlaced = false;
   placedOrder: PlacedOrder | null = null;
   formError = '';
+  fieldErrors: {
+    fullName?: string;
+    phone?: string;
+    email?: string;
+    address?: string;
+    city?: string;
+  } = {};
   whatsappUrl = '';
+  copyMessage = '';
+  whatsappOpened = false;
 
   checkoutForm: CheckoutDetails = {
     fullName: '',
@@ -33,6 +42,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   };
 
   private subscription = new Subscription();
+  private whatsappTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private cartService: CartService,
@@ -55,18 +65,22 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    if (this.whatsappTimer) {
+      clearTimeout(this.whatsappTimer);
+    }
   }
 
   placeOrder(): void {
     this.formError = '';
+    this.fieldErrors = {};
 
     if (this.cartItems.length === 0) {
       this.router.navigate(['/cart']);
       return;
     }
 
-    if (!this.isFormValid()) {
-      this.formError = 'Please fill in all required fields correctly.';
+    if (!this.validateForm()) {
+      this.formError = 'Please fix the highlighted fields and try again.';
       return;
     }
 
@@ -82,12 +96,34 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.whatsappUrl = this.orderService.buildWhatsAppUrl(this.placedOrder);
     this.orderPlaced = true;
     this.cartService.clearCart();
+
+    this.whatsappTimer = setTimeout(() => {
+      this.notifyOnWhatsApp();
+    }, 700);
   }
 
   notifyOnWhatsApp(): void {
     if (this.whatsappUrl) {
       window.open(this.whatsappUrl, '_blank');
+      this.whatsappOpened = true;
     }
+  }
+
+  copyOrderId(): void {
+    if (!this.placedOrder) {
+      return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(this.placedOrder.id).then(() => {
+        this.copyMessage = 'Order ID copied.';
+      }).catch(() => {
+        this.copyMessage = 'Could not copy order ID.';
+      });
+      return;
+    }
+
+    this.copyMessage = 'Clipboard not available.';
   }
 
   continueShopping(): void {
@@ -102,15 +138,36 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.totalQuantity = this.cartService.getTotalQuantity();
   }
 
-  private isFormValid(): boolean {
-    const nameOk = this.checkoutForm.fullName.trim().length >= 3;
-    const phoneDigits = this.checkoutForm.phone.replace(/[\s-]/g, '');
-    const phoneOk = /^(03\d{9}|\+923\d{9}|923\d{9})$/.test(phoneDigits);
-    const emailOk = !this.checkoutForm.email.trim() ||
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.checkoutForm.email.trim());
-    const addressOk = this.checkoutForm.address.trim().length >= 8;
-    const cityOk = this.checkoutForm.city.trim().length >= 2;
+  private validateForm(): boolean {
+    let valid = true;
 
-    return nameOk && phoneOk && emailOk && addressOk && cityOk;
+    if (this.checkoutForm.fullName.trim().length < 3) {
+      this.fieldErrors.fullName = 'Enter your full name (at least 3 characters).';
+      valid = false;
+    }
+
+    const phoneDigits = this.checkoutForm.phone.replace(/[\s-]/g, '');
+    if (!/^(03\d{9}|\+923\d{9}|923\d{9})$/.test(phoneDigits)) {
+      this.fieldErrors.phone = 'Enter a valid Pakistani mobile number (03XXXXXXXXX).';
+      valid = false;
+    }
+
+    if (this.checkoutForm.email.trim() &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.checkoutForm.email.trim())) {
+      this.fieldErrors.email = 'Enter a valid email or leave it blank.';
+      valid = false;
+    }
+
+    if (this.checkoutForm.address.trim().length < 8) {
+      this.fieldErrors.address = 'Enter a complete delivery address.';
+      valid = false;
+    }
+
+    if (this.checkoutForm.city.trim().length < 2) {
+      this.fieldErrors.city = 'Enter your city.';
+      valid = false;
+    }
+
+    return valid;
   }
 }

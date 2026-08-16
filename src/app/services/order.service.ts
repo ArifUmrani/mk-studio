@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { CartItem } from './cart.service';
+import { environment } from '../../environments/environment';
 
 export interface CheckoutDetails {
   fullName: string;
@@ -11,6 +13,8 @@ export interface CheckoutDetails {
   paymentMethod: 'cod';
 }
 
+export type OrderStatus = 'placed' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+
 export interface PlacedOrder {
   id: string;
   createdAt: string;
@@ -20,7 +24,7 @@ export interface PlacedOrder {
   shipping: number;
   tax: number;
   total: number;
-  status: 'placed';
+  status: OrderStatus;
 }
 
 @Injectable({
@@ -28,6 +32,21 @@ export interface PlacedOrder {
 })
 export class OrderService {
   private readonly storageKey = 'mk-studio-orders';
+  private readonly ordersSubject = new BehaviorSubject<PlacedOrder[]>([]);
+
+  orders$ = this.ordersSubject.asObservable();
+
+  readonly statusOptions: OrderStatus[] = [
+    'placed',
+    'confirmed',
+    'shipped',
+    'delivered',
+    'cancelled'
+  ];
+
+  constructor() {
+    this.ordersSubject.next(this.readOrders());
+  }
 
   placeOrder(
     customer: CheckoutDetails,
@@ -52,31 +71,88 @@ export class OrderService {
       status: 'placed'
     };
 
-    const orders = this.getOrders();
+    const orders = this.readOrders();
     orders.unshift(order);
-    this.saveOrders(orders);
+    this.persistOrders(orders);
     return order;
   }
 
   getOrders(): PlacedOrder[] {
+    return this.readOrders();
+  }
+
+  updateOrderStatus(orderId: string, status: OrderStatus): void {
+    const orders = this.readOrders();
+    const index = orders.findIndex(order => order.id === orderId);
+    if (index === -1) {
+      return;
+    }
+
+    orders[index] = {
+      ...orders[index],
+      status
+    };
+    this.persistOrders(orders);
+  }
+
+  buildWhatsAppUrl(order: PlacedOrder): string {
+    const message = this.buildWhatsAppMessage(order);
+    const phone = environment.storeWhatsApp.replace(/[^\d]/g, '');
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  }
+
+  buildWhatsAppMessage(order: PlacedOrder): string {
+    const lines = [
+      `New MK Studio Order: ${order.id}`,
+      `Customer: ${order.customer.fullName}`,
+      `Phone: ${order.customer.phone}`,
+      `City: ${order.customer.city}`,
+      `Address: ${order.customer.address}`,
+      `Payment: Cash on Delivery`,
+      `Total: Rs. ${order.total.toLocaleString('en-PK')}`,
+      '',
+      'Items:'
+    ];
+
+    order.items.forEach(item => {
+      lines.push(
+        `- ${item.product.name} (${item.selectedSize}/${item.selectedColor}) x${item.quantity}`
+      );
+    });
+
+    if (order.customer.notes.trim()) {
+      lines.push('', `Notes: ${order.customer.notes.trim()}`);
+    }
+
+    return lines.join('\n');
+  }
+
+  private readOrders(): PlacedOrder[] {
     try {
       const raw = localStorage.getItem(this.storageKey);
       if (!raw) {
         return [];
       }
       const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+      return parsed.map((order: PlacedOrder) => ({
+        ...order,
+        status: order.status || 'placed'
+      }));
     } catch {
       return [];
     }
   }
 
-  private saveOrders(orders: PlacedOrder[]): void {
+  private persistOrders(orders: PlacedOrder[]): void {
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(orders));
     } catch {
       // Ignore storage failures.
     }
+    this.ordersSubject.next([...orders]);
   }
 
   private createOrderId(): string {

@@ -1,0 +1,26 @@
+<div class="admin-login">
+  <div class="container">
+    <div class="login-card">
+      <p class="eyebrow">Store Admin</p>
+      <h1>MK Studio Admin</h1>
+      <p>Sign in to manage COD orders.</p>
+
+      <form (ngSubmit)="login()" novalidate>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            [(ngModel)]="password"
+            placeholder="Enter admin password"
+            autocomplete="current-password"
+          >
+        </div>
+
+        <p class="error" *ngIf="error">{{ error }}</p>
+        <button type="submit" class="btn btn-primary">Sign In</button>
+      </form>
+    </div>
+  </div>
+</div>

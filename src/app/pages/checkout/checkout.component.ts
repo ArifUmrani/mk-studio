@@ -18,6 +18,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   totalQuantity = 0;
 
   orderPlaced = false;
+  placingOrder = false;
   placedOrder: PlacedOrder | null = null;
   formError = '';
   fieldErrors: {
@@ -70,9 +71,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  placeOrder(): void {
+  async placeOrder(): Promise<void> {
     this.formError = '';
     this.fieldErrors = {};
+
+    if (this.placingOrder) {
+      return;
+    }
 
     if (this.cartItems.length === 0) {
       this.router.navigate(['/cart']);
@@ -84,22 +89,33 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.placedOrder = this.orderService.placeOrder(
-      this.checkoutForm,
-      this.cartItems,
-      this.subtotal,
-      this.shipping,
-      this.tax,
-      this.total
-    );
+    this.placingOrder = true;
 
-    this.whatsappUrl = this.orderService.buildWhatsAppUrl(this.placedOrder);
-    this.orderPlaced = true;
-    this.cartService.clearCart();
+    try {
+      this.placedOrder = await this.orderService.placeOrder(
+        this.checkoutForm,
+        this.cartItems,
+        this.subtotal,
+        this.shipping,
+        this.tax,
+        this.total
+      );
 
-    this.whatsappTimer = setTimeout(() => {
-      this.notifyOnWhatsApp();
-    }, 700);
+      this.whatsappUrl = this.orderService.buildWhatsAppUrl(this.placedOrder);
+      this.orderPlaced = true;
+      this.cartService.clearCart();
+
+      this.whatsappTimer = setTimeout(() => {
+        this.notifyOnWhatsApp();
+      }, 700);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Could not place order.';
+      this.formError = message.includes('not configured')
+        ? 'Orders are not connected yet. Please add your Supabase keys in environment.ts.'
+        : 'Could not place your order. Please try again in a moment.';
+    } finally {
+      this.placingOrder = false;
+    }
   }
 
   notifyOnWhatsApp(): void {

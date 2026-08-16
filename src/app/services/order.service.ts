@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CartItem } from './cart.service';
+import { SupabaseService } from './supabase.service';
 import { environment } from '../../environments/environment';
 
 export interface CheckoutDetails {
@@ -27,11 +28,22 @@ export interface PlacedOrder {
   status: OrderStatus;
 }
 
+interface OrderRow {
+  id: string;
+  created_at: string;
+  customer: CheckoutDetails;
+  items: CartItem[];
+  subtotal: number | string;
+  shipping: number | string;
+  tax: number | string;
+  total: number | string;
+  status: OrderStatus;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private readonly storageKey = 'mk-studio-orders';
   private readonly ordersSubject = new BehaviorSubject<PlacedOrder[]>([]);
 
   orders$ = this.ordersSubject.asObservable();
@@ -44,18 +56,16 @@ export class OrderService {
     'cancelled'
   ];
 
-  constructor() {
-    this.ordersSubject.next(this.readOrders());
-  }
+  constructor(private supabaseService: SupabaseService) { }
 
-  placeOrder(
+  async placeOrder(
     customer: CheckoutDetails,
     items: CartItem[],
     subtotal: number,
     shipping: number,
     tax: number,
     total: number
-  ): PlacedOrder {
+  ): Promise<PlacedOrder> {
     const order: PlacedOrder = {
       id: this.createOrderId(),
       createdAt: new Date().toISOString(),
@@ -71,28 +81,56 @@ export class OrderService {
       status: 'placed'
     };
 
-    const orders = this.readOrders();
-    orders.unshift(order);
-    this.persistOrders(orders);
-    return order;
+    const client = this.supabaseService.getClient();
+    const { data, error } = await client
+      .from('orders')
+      .insert(this.toRow(order))
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(error.message || 'Could not place order.');
+    }
+
+    return this.fromRow(data as OrderRow);
+  }
+
+  async loadOrders(): Promise<PlacedOrder[]> {
+    const client = this.supabaseService.getClient();
+    const { data, error } = await client.rpc('admin_get_orders', {
+      p_password: environment.adminPassword
+    });
+
+    if (error) {
+      throw new Error(error.message || 'Could not load orders.');
+    }
+
+    const orders = ((data as OrderRow[]) || []).map(row => this.fromRow(row));
+    this.ordersSubject.next(orders);
+    return orders;
   }
 
   getOrders(): PlacedOrder[] {
-    return this.readOrders();
+    return this.ordersSubject.value;
   }
 
-  updateOrderStatus(orderId: string, status: OrderStatus): void {
-    const orders = this.readOrders();
-    const index = orders.findIndex(order => order.id === orderId);
-    if (index === -1) {
-      return;
+  async updateOrderStatus(orderId: string, status: OrderStatus): Promise<void> {
+    const client = this.supabaseService.getClient();
+    const { data, error } = await client.rpc('admin_update_order_status', {
+      p_password: environment.adminPassword,
+      p_order_id: orderId,
+      p_status: status
+    });
+
+    if (error) {
+      throw new Error(error.message || 'Could not update order status.');
     }
 
-    orders[index] = {
-      ...orders[index],
-      status
-    };
-    this.persistOrders(orders);
+    const updated = this.fromRow(data as OrderRow);
+    const orders = this.ordersSubject.value.map(order =>
+      order.id === updated.id ? updated : order
+    );
+    this.ordersSubject.next(orders);
   }
 
   buildWhatsAppUrl(order: PlacedOrder): string {
@@ -153,32 +191,32 @@ export class OrderService {
     return lines.join('\n');
   }
 
-  private readOrders(): PlacedOrder[] {
-    try {
-      const raw = localStorage.getItem(this.storageKey);
-      if (!raw) {
-        return [];
-      }
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) {
-        return [];
-      }
-      return parsed.map((order: PlacedOrder) => ({
-        ...order,
-        status: order.status || 'placed'
-      }));
-    } catch {
-      return [];
-    }
+  private toRow(order: PlacedOrder): Omit<OrderRow, 'created_at'> & { created_at: string } {
+    return {
+      id: order.id,
+      created_at: order.createdAt,
+      customer: order.customer,
+      items: order.items,
+      subtotal: order.subtotal,
+      shipping: order.shipping,
+      tax: order.tax,
+      total: order.total,
+      status: order.status
+    };
   }
 
-  private persistOrders(orders: PlacedOrder[]): void {
-    try {
-      localStorage.setItem(this.storageKey, JSON.stringify(orders));
-    } catch {
-      // Ignore storage failures.
-    }
-    this.ordersSubject.next([...orders]);
+  private fromRow(row: OrderRow): PlacedOrder {
+    return {
+      id: row.id,
+      createdAt: row.created_at,
+      customer: row.customer,
+      items: row.items || [],
+      subtotal: Number(row.subtotal),
+      shipping: Number(row.shipping),
+      tax: Number(row.tax),
+      total: Number(row.total),
+      status: row.status || 'placed'
+    };
   }
 
   private createOrderId(): string {

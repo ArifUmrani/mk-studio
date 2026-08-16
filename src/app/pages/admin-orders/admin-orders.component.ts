@@ -16,6 +16,10 @@ export class AdminOrdersComponent implements OnInit, OnDestroy {
   searchQuery = '';
   statusFilter: OrderStatus | 'all' = 'all';
   copyMessage = '';
+  loading = true;
+  loadError = '';
+  actionError = '';
+  updatingOrderId: string | null = null;
 
   private subscription = new Subscription();
 
@@ -33,10 +37,29 @@ export class AdminOrdersComponent implements OnInit, OnDestroy {
         this.ensureValidSelection();
       })
     );
+    this.refreshOrders();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  async refreshOrders(): Promise<void> {
+    this.loading = true;
+    this.loadError = '';
+    this.actionError = '';
+
+    try {
+      await this.orderService.loadOrders();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Could not load orders.';
+      this.loadError = message.includes('not configured')
+        ? 'Supabase is not configured. Add supabaseUrl and supabaseAnonKey in environment.ts, then run supabase/schema.sql.'
+        : 'Could not load orders. Check your Supabase setup and try again.';
+      this.orders = [];
+    } finally {
+      this.loading = false;
+    }
   }
 
   get filteredOrders(): PlacedOrder[] {
@@ -83,9 +106,24 @@ export class AdminOrdersComponent implements OnInit, OnDestroy {
     this.ensureValidSelection();
   }
 
-  onStatusChange(orderId: string, event: Event): void {
+  async onStatusChange(orderId: string, event: Event): Promise<void> {
     const select = event.target as HTMLSelectElement;
-    this.orderService.updateOrderStatus(orderId, select.value as OrderStatus);
+    const nextStatus = select.value as OrderStatus;
+    const previous = this.orders.find(order => order.id === orderId)?.status;
+
+    this.updatingOrderId = orderId;
+    this.actionError = '';
+
+    try {
+      await this.orderService.updateOrderStatus(orderId, nextStatus);
+    } catch {
+      if (previous) {
+        select.value = previous;
+      }
+      this.actionError = 'Could not update order status. Please try again.';
+    } finally {
+      this.updatingOrderId = null;
+    }
   }
 
   getStatusLabel(status: OrderStatus): string {

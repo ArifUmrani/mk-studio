@@ -61,7 +61,13 @@
 
         <p class="form-error" *ngIf="formError">{{ formError }}</p>
 
-        <button type="submit" class="btn btn-primary place-order-btn">Place Order</button>
+        <button
+          type="submit"
+          class="btn btn-primary place-order-btn"
+          [disabled]="placingOrder"
+        >
+          {{ placingOrder ? 'Placing Order…' : 'Place Order' }}
+        </button>
         <a routerLink="/cart" class="btn btn-secondary back-cart-btn">Back to Cart</a>
       </form>
 

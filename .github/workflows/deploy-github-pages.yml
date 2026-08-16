@@ -32,12 +32,13 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build -- --configuration=production --base-href /mk-studio/
+        run: npm run build -- --configuration=production --base-href /
 
-      - name: Add GitHub Pages SPA fallback
+      - name: Add GitHub Pages SPA fallback and custom domain
         run: |
           cp dist/mk-studio/index.html dist/mk-studio/404.html
           touch dist/mk-studio/.nojekyll
+          cp CNAME dist/mk-studio/CNAME
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

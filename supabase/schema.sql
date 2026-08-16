@@ -40,6 +40,9 @@ create policy "Public can place orders"
   to anon, authenticated
   with check (true);
 
+-- Checkout inserts only; admin reads via admin_get_orders (no public SELECT).
+grant insert on table public.orders to anon, authenticated;
+
 -- Admin password helper (security definer; not exposed as a table)
 create or replace function public.is_admin_password(p_password text)
 returns boolean

@@ -82,17 +82,15 @@ export class OrderService {
     };
 
     const client = this.supabaseService.getClient();
-    const { data, error } = await client
+    const { error } = await client
       .from('orders')
-      .insert(this.toRow(order))
-      .select()
-      .single();
+      .insert(this.toRow(order));
 
     if (error) {
       throw new Error(error.message || 'Could not place order.');
     }
 
-    return this.fromRow(data as OrderRow);
+    return order;
   }
 
   async loadOrders(): Promise<PlacedOrder[]> {

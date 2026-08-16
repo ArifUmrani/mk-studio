@@ -110,6 +110,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }, 700);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Could not place order.';
+      console.error('Checkout order failed:', error);
       this.formError = message.includes('not configured')
         ? 'Orders are not connected yet. Please add your Supabase keys in environment.ts.'
         : 'Could not place your order. Please try again in a moment.';

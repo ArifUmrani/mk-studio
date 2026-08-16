@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { ProductService, Product } from '../../services/product.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-product-details',
@@ -13,10 +13,13 @@ export class ProductDetailsComponent implements OnInit {
   selectedSize: string = '';
   selectedColor: string = '';
   quantity: number = 1;
+  addToCartMessage: string = '';
+  showAddToCartMessage: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService
   ) { }
 
   ngOnInit(): void {
@@ -51,20 +54,84 @@ export class ProductDetailsComponent implements OnInit {
     const colorMap: { [key: string]: string } = {
       'White': '#fff',
       'Black': '#000',
-      'Gray': '#808080',
       'Navy': '#000080',
-      'Blue': '#0000ff',
-      'Red': '#ff0000',
-      'Green': '#008000',
-      'Brown': '#8b4513',
       'Cream': '#fffdd0',
       'Burgundy': '#800020',
-      'Khaki': '#c3b091',
       'Olive': '#808000',
-      'Tan': '#d2b48c',
-      'Floral': '#ffc0cb',
-      'Print': '#9370db'
+      'Ivory': '#fffff0',
+      'Peach': '#ffcba4',
+      'Sky Blue': '#87ceeb',
+      'Mint': '#98d7c2',
+      'Lilac': '#c8a2c8',
+      'Powder Pink': '#f6c6d0',
+      'Sea Green': '#2e8b57',
+      'Beige': '#f5f5dc',
+      'Maroon': '#800000',
+      'Mustard': '#d4a017',
+      'Teal': '#008080',
+      'Gold': '#d4af37',
+      'Wine': '#722f37',
+      'Bottle Green': '#006a4e',
+      'Yellow': '#f4c430',
+      'Coral': '#ff7f50',
+      'Aqua': '#7fdbda',
+      'Emerald': '#046307',
+      'Rust': '#b7410e',
+      'Charcoal': '#36454f',
+      'Deep Blue': '#012456',
+      'Rose': '#e8a0bf',
+      'Silver Grey': '#c0c0c0',
+      'Fawn': '#e5aa70',
+      'Plum': '#8e4585',
+      'Mehndi': '#6b8e23',
+      'Brick Red': '#cb4154'
     };
     return colorMap[color] || color;
+  }
+
+  addToCart(): void {
+    if (!this.product) {
+      return;
+    }
+
+    if (this.quantity <= 0) {
+      this.showAddToCartMessage = true;
+      this.addToCartMessage = 'Please select a valid quantity.';
+      setTimeout(() => {
+        this.showAddToCartMessage = false;
+      }, 3000);
+      return;
+    }
+
+    if (this.product.sizes.length > 1 && !this.selectedSize) {
+      this.showAddToCartMessage = true;
+      this.addToCartMessage = 'Please select a size.';
+      setTimeout(() => {
+        this.showAddToCartMessage = false;
+      }, 3000);
+      return;
+    }
+
+    if (this.product.colors.length > 1 && !this.selectedColor) {
+      this.showAddToCartMessage = true;
+      this.addToCartMessage = 'Please select a color.';
+      setTimeout(() => {
+        this.showAddToCartMessage = false;
+      }, 3000);
+      return;
+    }
+
+    this.cartService.addToCart(
+      this.product,
+      this.selectedSize,
+      this.selectedColor,
+      this.quantity
+    );
+
+    this.showAddToCartMessage = true;
+    this.addToCartMessage = 'Product added to cart successfully!';
+    setTimeout(() => {
+      this.showAddToCartMessage = false;
+    }, 3000);
   }
 }

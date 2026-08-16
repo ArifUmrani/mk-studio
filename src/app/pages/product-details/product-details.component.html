@@ -2,17 +2,25 @@
   <div class="container">
     <div class="product-details-content">
       <div class="product-gallery">
-        <div class="main-image" [style.background-image]="'url(' + product.image + ')'"></div>
+        <div class="main-image-stage">
+          <div class="main-image" [style.background-image]="'url(' + product.image + ')'"></div>
+        </div>
         <div class="thumbnail-images">
-          <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
-          <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
-          <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
+          <div class="thumbnail-stage">
+            <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
+          </div>
+          <div class="thumbnail-stage">
+            <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
+          </div>
+          <div class="thumbnail-stage">
+            <div class="thumbnail" [style.background-image]="'url(' + product.image + ')'"></div>
+          </div>
         </div>
       </div>
       <div class="product-info">
         <h1>{{ product.name }}</h1>
         <p class="product-category">{{ product.category }}</p>
-        <p class="product-price">${{ product.price.toFixed(2) }}</p>
+        <p class="product-price">Rs. {{ product.price.toLocaleString('en-PK') }}</p>
         <p class="product-description">{{ product.description }}</p>
         <div class="product-options">
           <div class="size-selector">
@@ -39,8 +47,13 @@
           </div>
         </div>
         <div class="product-actions">
-          <button class="btn btn-primary">Add to Cart</button>
+          <button class="btn btn-primary" (click)="addToCart()">Add to Cart</button>
           <button class="btn btn-secondary">Add to Wishlist</button>
+        </div>
+        <div *ngIf="showAddToCartMessage" class="add-to-cart-message"
+          [class.success]="addToCartMessage.includes('successfully')"
+          [class.error]="!addToCartMessage.includes('successfully')">
+          {{ addToCartMessage }}
         </div>
       </div>
     </div>

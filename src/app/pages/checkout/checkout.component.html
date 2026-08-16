@@ -1,0 +1,175 @@
+<div class="checkout">
+  <div class="container" *ngIf="!orderPlaced; else confirmation">
+    <header class="checkout-header">
+      <p class="eyebrow">Checkout</p>
+      <h1>Complete Your Order</h1>
+      <p>Enter your delivery details. Payment is Cash on Delivery.</p>
+    </header>
+
+    <div class="checkout-content" *ngIf="cartItems.length > 0">
+      <form class="checkout-form" (ngSubmit)="placeOrder()" novalidate>
+        <section class="form-section">
+          <h2>Delivery Details</h2>
+
+          <div class="form-group">
+            <label for="fullName">Full Name *</label>
+            <input id="fullName" name="fullName" type="text" [(ngModel)]="checkoutForm.fullName" placeholder="Your full name" required>
+            <p class="field-error" *ngIf="fieldErrors.fullName">{{ fieldErrors.fullName }}</p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone *</label>
+              <input id="phone" name="phone" type="tel" [(ngModel)]="checkoutForm.phone" placeholder="03XXXXXXXXX" required>
+              <p class="field-error" *ngIf="fieldErrors.phone">{{ fieldErrors.phone }}</p>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" [(ngModel)]="checkoutForm.email" placeholder="Optional">
+              <p class="field-error" *ngIf="fieldErrors.email">{{ fieldErrors.email }}</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Delivery Address *</label>
+            <textarea id="address" name="address" rows="3" [(ngModel)]="checkoutForm.address" placeholder="House no, street, area" required></textarea>
+            <p class="field-error" *ngIf="fieldErrors.address">{{ fieldErrors.address }}</p>
+          </div>
+
+          <div class="form-group">
+            <label for="city">City *</label>
+            <input id="city" name="city" type="text" [(ngModel)]="checkoutForm.city" placeholder="Karachi, Lahore, Islamabad..." required>
+            <p class="field-error" *ngIf="fieldErrors.city">{{ fieldErrors.city }}</p>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Order Notes</label>
+            <textarea id="notes" name="notes" rows="3" [(ngModel)]="checkoutForm.notes" placeholder="Optional delivery instructions"></textarea>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Payment Method</h2>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="cod" [(ngModel)]="checkoutForm.paymentMethod" checked>
+            <span>
+              <strong>Cash on Delivery (COD)</strong>
+              <small>Pay when your order arrives.</small>
+            </span>
+          </label>
+        </section>
+
+        <p class="form-error" *ngIf="formError">{{ formError }}</p>
+
+        <button
+          type="submit"
+          class="btn btn-primary place-order-btn"
+          [disabled]="placingOrder"
+        >
+          {{ placingOrder ? 'Placing Order…' : 'Place Order' }}
+        </button>
+        <a routerLink="/cart" class="btn btn-secondary back-cart-btn">Back to Cart</a>
+      </form>
+
+      <aside class="order-summary">
+        <h2>Order Summary</h2>
+
+        <div class="summary-item" *ngFor="let item of cartItems">
+          <div class="summary-item-image" [style.background-image]="'url(' + item.product.image + ')'"></div>
+          <div class="summary-item-info">
+            <h3>{{ item.product.name }}</h3>
+            <p>{{ item.selectedSize }} / {{ item.selectedColor }} × {{ item.quantity }}</p>
+            <p class="summary-item-price">Rs. {{ (item.product.price * item.quantity).toLocaleString('en-PK') }}</p>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <span>Items</span>
+          <span>{{ totalQuantity }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>Rs. {{ subtotal.toLocaleString('en-PK') }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span>Rs. {{ shipping.toLocaleString('en-PK') }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Tax</span>
+          <span>Rs. {{ tax.toLocaleString('en-PK') }}</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span>Rs. {{ total.toLocaleString('en-PK') }}</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<ng-template #confirmation>
+  <div class="container">
+    <div class="confirmation" *ngIf="placedOrder">
+      <p class="eyebrow">Order Confirmed</p>
+      <h1>Thank you, {{ placedOrder.customer.fullName }}</h1>
+      <p class="confirmation-text">
+        Your order <strong>{{ placedOrder.id }}</strong> has been placed successfully.
+      </p>
+
+      <ol class="next-steps">
+        <li>Send your order details to MK Studio on WhatsApp.</li>
+        <li>We will confirm your order by call or message.</li>
+        <li>Pay cash on delivery when your parcel arrives.</li>
+      </ol>
+
+      <div class="confirmation-card">
+        <div class="summary-row">
+          <span>Order ID</span>
+          <span>{{ placedOrder.id }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Payment</span>
+          <span>Cash on Delivery</span>
+        </div>
+        <div class="summary-row">
+          <span>City</span>
+          <span>{{ placedOrder.customer.city }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Phone</span>
+          <span>{{ placedOrder.customer.phone }}</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total Due on Delivery</span>
+          <span>Rs. {{ placedOrder.total.toLocaleString('en-PK') }}</span>
+        </div>
+      </div>
+
+      <div class="confirmation-card items-card">
+        <h3>Items Ordered</h3>
+        <div class="confirm-item" *ngFor="let item of placedOrder.items">
+          <p><strong>{{ item.product.name }}</strong></p>
+          <p>{{ item.selectedSize }} / {{ item.selectedColor }} × {{ item.quantity }}</p>
+        </div>
+      </div>
+
+      <p class="whatsapp-note" *ngIf="!whatsappOpened">
+        WhatsApp should open automatically. If it doesn’t, tap the button below.
+      </p>
+      <p class="whatsapp-note success" *ngIf="whatsappOpened">
+        WhatsApp opened. Please send the pre-filled message to confirm your order.
+      </p>
+
+      <button type="button" class="btn btn-primary" (click)="notifyOnWhatsApp()">
+        Send Order on WhatsApp
+      </button>
+      <button type="button" class="btn btn-secondary home-btn" (click)="copyOrderId()">
+        Copy Order ID
+      </button>
+      <p class="copy-message" *ngIf="copyMessage">{{ copyMessage }}</p>
+      <button type="button" class="btn btn-secondary home-btn" (click)="continueShopping()">Continue Shopping</button>
+      <a routerLink="/" class="btn btn-secondary home-btn">Back to Home</a>
+    </div>
+  </div>
+</ng-template>

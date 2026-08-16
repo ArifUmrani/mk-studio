@@ -1,16 +1,36 @@
 <header class="header">
   <div class="container">
     <div class="header-content">
-      <a routerLink="/" class="logo">MK Studio</a>
-      <nav class="nav">
-        <a routerLink="/" class="nav-link" routerLinkActive="active">Home</a>
-        <a routerLink="/shop" class="nav-link" routerLinkActive="active">Shop</a>
-        <a routerLink="/about" class="nav-link" routerLinkActive="active">About</a>
-        <a routerLink="/contact" class="nav-link" routerLinkActive="active">Contact</a>
+      <a routerLink="/" class="logo" (click)="closeMobileMenu()" aria-label="MK Studio home">
+        <span class="logo-mk">MK</span>
+        <span class="logo-studio">Studio</span>
+      </a>
+
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+        <span class="hamburger" [class.open]="mobileMenuOpen">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
+      <nav class="nav" [class.mobile-open]="mobileMenuOpen">
+        <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">Home</a>
+        <a routerLink="/shop" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Shop</a>
+        <a routerLink="/about" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">About</a>
+        <a routerLink="/contact" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Contact</a>
+        <a routerLink="/cart" class="nav-link cart-link-mobile" routerLinkActive="active" (click)="closeMobileMenu()">
+          Cart ({{ cartCount$ | async }})
+        </a>
+        <a routerLink="/admin/orders" class="nav-link cart-link-mobile" routerLinkActive="active" (click)="closeMobileMenu()">
+          Admin
+        </a>
       </nav>
-      <div class="header-actions">
+
+      <div class="header-actions desktop-only">
+        <a routerLink="/admin/orders" class="admin-link">Admin</a>
         <a routerLink="/cart" class="cart-link">
-          Cart
+          Cart ({{ cartCount$ | async }})
         </a>
       </div>
     </div>

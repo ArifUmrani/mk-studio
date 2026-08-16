@@ -1,0 +1,170 @@
+<div class="admin-orders">
+  <div class="container">
+    <header class="admin-header">
+      <div>
+        <p class="eyebrow">Store Admin</p>
+        <h1>Orders</h1>
+        <p>
+          {{ orders.length }} total
+          <span *ngIf="newOrdersCount > 0"> · {{ newOrdersCount }} new</span>
+        </p>
+      </div>
+      <div class="admin-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="refreshOrders()"
+          [disabled]="loading"
+        >
+          {{ loading ? 'Refreshing…' : 'Refresh' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="logout()">Logout</button>
+      </div>
+    </header>
+
+    <p class="load-error" *ngIf="actionError">{{ actionError }}</p>
+
+    <div class="empty-state" *ngIf="loading">
+      <h2>Loading orders…</h2>
+      <p>Fetching the latest COD orders from Supabase.</p>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && loadError">
+      <h2>Orders unavailable</h2>
+      <p>{{ loadError }}</p>
+      <button type="button" class="btn btn-primary" (click)="refreshOrders()">Try again</button>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !loadError && orders.length === 0">
+      <h2>No orders yet</h2>
+      <p>When customers place COD orders, they will appear here.</p>
+      <a routerLink="/shop" class="btn btn-primary">Go to Shop</a>
+    </div>
+
+    <ng-container *ngIf="!loading && !loadError && orders.length > 0">
+      <div class="toolbar">
+        <input
+          type="search"
+          class="search-input"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onFiltersChanged()"
+          placeholder="Search by name, phone, city, or order ID"
+        >
+        <select
+          class="status-filter"
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="onFiltersChanged()"
+        >
+          <option value="all">All statuses</option>
+          <option *ngFor="let status of statusOptions" [value]="status">
+            {{ getStatusLabel(status) }}
+          </option>
+        </select>
+      </div>
+
+      <div class="empty-state" *ngIf="filteredOrders.length === 0; else filteredLayout">
+        <h2>No matching orders</h2>
+        <p>Try another search or status filter.</p>
+      </div>
+
+      <ng-template #filteredLayout>
+        <div class="orders-layout">
+          <aside class="orders-list">
+            <button
+              type="button"
+              class="order-row"
+              *ngFor="let order of filteredOrders"
+              [class.active]="selectedOrderId === order.id"
+              (click)="selectOrder(order.id)"
+            >
+              <div class="order-row-top">
+                <strong>{{ order.id }}</strong>
+                <span class="status-pill" [attr.data-status]="order.status">
+                  {{ getStatusLabel(order.status) }}
+                </span>
+              </div>
+              <p>{{ order.customer.fullName }} · {{ order.customer.city }}</p>
+              <p class="muted">Rs. {{ order.total.toLocaleString('en-PK') }} · {{ formatDate(order.createdAt) }}</p>
+            </button>
+          </aside>
+
+          <section class="order-detail" *ngIf="selectedOrder; else pickOrder">
+            <div class="detail-top">
+              <div>
+                <h2>{{ selectedOrder.id }}</h2>
+                <p>{{ formatDate(selectedOrder.createdAt) }}</p>
+                <button type="button" class="link-btn" (click)="copyOrderId(selectedOrder)">Copy order ID</button>
+                <p class="copy-message" *ngIf="copyMessage">{{ copyMessage }}</p>
+              </div>
+              <div class="status-control">
+                <label for="statusSelect">Status</label>
+                <select
+                  id="statusSelect"
+                  [ngModel]="selectedOrder.status"
+                  [disabled]="updatingOrderId === selectedOrder.id"
+                  (change)="onStatusChange(selectedOrder.id, $event)"
+                >
+                  <option *ngFor="let status of statusOptions" [value]="status">
+                    {{ getStatusLabel(status) }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="detail-grid">
+              <div class="detail-card">
+                <h3>Customer</h3>
+                <p><strong>{{ selectedOrder.customer.fullName }}</strong></p>
+                <p>{{ selectedOrder.customer.phone }}</p>
+                <p *ngIf="selectedOrder.customer.email">{{ selectedOrder.customer.email }}</p>
+                <p>{{ selectedOrder.customer.address }}</p>
+                <p>{{ selectedOrder.customer.city }}</p>
+                <p *ngIf="selectedOrder.customer.notes"><em>Notes: {{ selectedOrder.customer.notes }}</em></p>
+              </div>
+
+              <div class="detail-card">
+                <h3>Payment</h3>
+                <p>Cash on Delivery</p>
+                <p>Subtotal: Rs. {{ selectedOrder.subtotal.toLocaleString('en-PK') }}</p>
+                <p>Shipping: Rs. {{ selectedOrder.shipping.toLocaleString('en-PK') }}</p>
+                <p>Tax: Rs. {{ selectedOrder.tax.toLocaleString('en-PK') }}</p>
+                <p class="total">Total: Rs. {{ selectedOrder.total.toLocaleString('en-PK') }}</p>
+              </div>
+            </div>
+
+            <div class="detail-card items-card">
+              <h3>Items</h3>
+              <div class="item-row" *ngFor="let item of selectedOrder.items">
+                <div class="item-image" [style.background-image]="'url(' + item.product.image + ')'"></div>
+                <div>
+                  <p><strong>{{ item.product.name }}</strong></p>
+                  <p>{{ item.selectedSize }} / {{ item.selectedColor }} × {{ item.quantity }}</p>
+                  <p>Rs. {{ (item.product.price * item.quantity).toLocaleString('en-PK') }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button type="button" class="btn btn-primary" (click)="callCustomer(selectedOrder)">
+                Call Customer
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="messageCustomer(selectedOrder)">
+                WhatsApp Customer
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="shareToStore(selectedOrder)">
+                Share to Store WhatsApp
+              </button>
+            </div>
+          </section>
+
+          <ng-template #pickOrder>
+            <section class="order-detail empty-detail">
+              <h2>Select an order</h2>
+              <p>Choose an order from the list to view details and update status.</p>
+            </section>
+          </ng-template>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

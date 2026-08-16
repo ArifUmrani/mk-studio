@@ -101,6 +101,32 @@ export class OrderService {
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   }
 
+  buildCustomerWhatsAppUrl(order: PlacedOrder): string {
+    const phone = this.toWhatsAppPhone(order.customer.phone);
+    const message = [
+      `Assalam o Alaikum ${order.customer.fullName},`,
+      `This is MK Studio regarding your order ${order.id}.`,
+      `Total: Rs. ${order.total.toLocaleString('en-PK')} (Cash on Delivery).`,
+      'We will confirm delivery details with you shortly.'
+    ].join('\n');
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  }
+
+  getCallUrl(phone: string): string {
+    return `tel:${this.toLocalDialPhone(phone)}`;
+  }
+
+  getStatusLabel(status: OrderStatus): string {
+    const labels: { [key in OrderStatus]: string } = {
+      placed: 'New',
+      confirmed: 'Confirmed',
+      shipped: 'Shipped',
+      delivered: 'Delivered',
+      cancelled: 'Cancelled'
+    };
+    return labels[status] || status;
+  }
+
   buildWhatsAppMessage(order: PlacedOrder): string {
     const lines = [
       `New MK Studio Order: ${order.id}`,
@@ -120,8 +146,8 @@ export class OrderService {
       );
     });
 
-    if (order.customer.notes.trim()) {
-      lines.push('', `Notes: ${order.customer.notes.trim()}`);
+    if ((order.customer.notes || '').trim()) {
+      lines.push('', `Notes: ${(order.customer.notes || '').trim()}`);
     }
 
     return lines.join('\n');
@@ -159,5 +185,21 @@ export class OrderService {
     const stamp = Date.now().toString().slice(-8);
     const random = Math.floor(Math.random() * 900 + 100);
     return `MK-${stamp}-${random}`;
+  }
+
+  private toWhatsAppPhone(phone: string): string {
+    const digits = phone.replace(/[^\d]/g, '');
+    if (digits.startsWith('92')) {
+      return digits;
+    }
+    if (digits.startsWith('0')) {
+      return `92${digits.slice(1)}`;
+    }
+    return digits;
+  }
+
+  private toLocalDialPhone(phone: string): string {
+    const digits = phone.replace(/[^\d+]/g, '');
+    return digits;
   }
 }

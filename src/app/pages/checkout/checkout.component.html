@@ -14,27 +14,32 @@
           <div class="form-group">
             <label for="fullName">Full Name *</label>
             <input id="fullName" name="fullName" type="text" [(ngModel)]="checkoutForm.fullName" placeholder="Your full name" required>
+            <p class="field-error" *ngIf="fieldErrors.fullName">{{ fieldErrors.fullName }}</p>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="phone">Phone *</label>
               <input id="phone" name="phone" type="tel" [(ngModel)]="checkoutForm.phone" placeholder="03XXXXXXXXX" required>
+              <p class="field-error" *ngIf="fieldErrors.phone">{{ fieldErrors.phone }}</p>
             </div>
             <div class="form-group">
               <label for="email">Email</label>
               <input id="email" name="email" type="email" [(ngModel)]="checkoutForm.email" placeholder="Optional">
+              <p class="field-error" *ngIf="fieldErrors.email">{{ fieldErrors.email }}</p>
             </div>
           </div>
 
           <div class="form-group">
             <label for="address">Delivery Address *</label>
             <textarea id="address" name="address" rows="3" [(ngModel)]="checkoutForm.address" placeholder="House no, street, area" required></textarea>
+            <p class="field-error" *ngIf="fieldErrors.address">{{ fieldErrors.address }}</p>
           </div>
 
           <div class="form-group">
             <label for="city">City *</label>
             <input id="city" name="city" type="text" [(ngModel)]="checkoutForm.city" placeholder="Karachi, Lahore, Islamabad..." required>
+            <p class="field-error" *ngIf="fieldErrors.city">{{ fieldErrors.city }}</p>
           </div>
 
           <div class="form-group">
@@ -104,10 +109,19 @@
       <h1>Thank you, {{ placedOrder.customer.fullName }}</h1>
       <p class="confirmation-text">
         Your order <strong>{{ placedOrder.id }}</strong> has been placed successfully.
-        Our team will contact you on {{ placedOrder.customer.phone }} to confirm delivery.
       </p>
 
+      <ol class="next-steps">
+        <li>Send your order details to MK Studio on WhatsApp.</li>
+        <li>We will confirm your order by call or message.</li>
+        <li>Pay cash on delivery when your parcel arrives.</li>
+      </ol>
+
       <div class="confirmation-card">
+        <div class="summary-row">
+          <span>Order ID</span>
+          <span>{{ placedOrder.id }}</span>
+        </div>
         <div class="summary-row">
           <span>Payment</span>
           <span>Cash on Delivery</span>
@@ -117,8 +131,8 @@
           <span>{{ placedOrder.customer.city }}</span>
         </div>
         <div class="summary-row">
-          <span>Items</span>
-          <span>{{ placedOrder.items.length }}</span>
+          <span>Phone</span>
+          <span>{{ placedOrder.customer.phone }}</span>
         </div>
         <div class="summary-row total">
           <span>Total Due on Delivery</span>
@@ -126,9 +140,28 @@
         </div>
       </div>
 
+      <div class="confirmation-card items-card">
+        <h3>Items Ordered</h3>
+        <div class="confirm-item" *ngFor="let item of placedOrder.items">
+          <p><strong>{{ item.product.name }}</strong></p>
+          <p>{{ item.selectedSize }} / {{ item.selectedColor }} × {{ item.quantity }}</p>
+        </div>
+      </div>
+
+      <p class="whatsapp-note" *ngIf="!whatsappOpened">
+        WhatsApp should open automatically. If it doesn’t, tap the button below.
+      </p>
+      <p class="whatsapp-note success" *ngIf="whatsappOpened">
+        WhatsApp opened. Please send the pre-filled message to confirm your order.
+      </p>
+
       <button type="button" class="btn btn-primary" (click)="notifyOnWhatsApp()">
         Send Order on WhatsApp
       </button>
+      <button type="button" class="btn btn-secondary home-btn" (click)="copyOrderId()">
+        Copy Order ID
+      </button>
+      <p class="copy-message" *ngIf="copyMessage">{{ copyMessage }}</p>
       <button type="button" class="btn btn-secondary home-btn" (click)="continueShopping()">Continue Shopping</button>
       <a routerLink="/" class="btn btn-secondary home-btn">Back to Home</a>
     </div>

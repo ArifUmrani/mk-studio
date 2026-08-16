@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  adminPassword: 'mkstudio2026',
+  storeWhatsApp: '923003702742'
 };

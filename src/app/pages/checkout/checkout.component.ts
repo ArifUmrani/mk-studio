@@ -20,6 +20,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   orderPlaced = false;
   placedOrder: PlacedOrder | null = null;
   formError = '';
+  whatsappUrl = '';
 
   checkoutForm: CheckoutDetails = {
     fullName: '',
@@ -78,8 +79,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.total
     );
 
+    this.whatsappUrl = this.orderService.buildWhatsAppUrl(this.placedOrder);
     this.orderPlaced = true;
     this.cartService.clearCart();
+  }
+
+  notifyOnWhatsApp(): void {
+    if (this.whatsappUrl) {
+      window.open(this.whatsappUrl, '_blank');
+    }
   }
 
   continueShopping(): void {

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  adminPassword: 'mkstudio2026',
+  adminPassword: 'mkstudio888',
   storeWhatsApp: '923342888918',
   // From Supabase → Project Settings → API
   supabaseUrl: 'https://qrdehhcwvjcveezxrrou.supabase.co',

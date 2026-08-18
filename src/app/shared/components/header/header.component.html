@@ -22,13 +22,9 @@
         <a routerLink="/cart" class="nav-link cart-link-mobile" routerLinkActive="active" (click)="closeMobileMenu()">
           Cart ({{ cartCount$ | async }})
         </a>
-        <a routerLink="/admin/orders" class="nav-link cart-link-mobile" routerLinkActive="active" (click)="closeMobileMenu()">
-          Admin
-        </a>
       </nav>
 
       <div class="header-actions desktop-only">
-        <a routerLink="/admin/orders" class="admin-link">Admin</a>
         <a routerLink="/cart" class="cart-link">
           Cart ({{ cartCount$ | async }})
         </a>

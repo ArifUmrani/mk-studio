@@ -97,6 +97,15 @@
         }
       }
     }
+
+    > p a {
+      color: var(--color-accent-light);
+      text-decoration: none;
+
+      &:hover {
+        color: #fff;
+      }
+    }
   }
 
   .brand-section p {

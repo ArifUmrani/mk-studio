@@ -2,55 +2,91 @@
   <div class="container">
     <div class="contact-header">
       <h1>Contact Us</h1>
-      <p>Get in touch with our team</p>
+      <p>MK Studio is an online boutique. Message us on WhatsApp for orders, sizing, and custom queries.</p>
     </div>
-    <div class="contact-content">
+
+    <div class="contact-content" *ngIf="!messageSent; else confirmation">
       <div class="contact-info">
-        <h2>Contact Information</h2>
+        <h2>Reach the Studio</h2>
         <div class="info-item">
-          <h3>Address</h3>
-          <p>123 Fashion Street</p>
-          <p>New York, NY 10001</p>
+          <h3>WhatsApp</h3>
+          <p>
+            <a [href]="whatsappChatUrl" target="_blank" rel="noopener noreferrer">{{ whatsappDisplay }}</a>
+          </p>
+          <p>Best way to reach us — typically same-day replies.</p>
         </div>
         <div class="info-item">
-          <h3>Email</h3>
-          <p>info@mkstudio.com</p>
-          <p>support@mkstudio.com</p>
+          <h3>Instagram</h3>
+          <p>
+            <a [href]="instagramUrl" target="_blank" rel="noopener noreferrer">@mkstudio.pk</a>
+          </p>
         </div>
         <div class="info-item">
-          <h3>Phone</h3>
-          <p>(555) 123-4567</p>
-          <p>(555) 987-6543</p>
-        </div>
-        <div class="info-item">
-          <h3>Hours</h3>
-          <p>Monday - Friday: 9AM - 6PM</p>
-          <p>Saturday: 10AM - 4PM</p>
-          <p>Sunday: Closed</p>
+          <h3>Shopping</h3>
+          <p>Online store — Cash on Delivery across Pakistan.</p>
+          <p>No physical outlet yet.</p>
         </div>
       </div>
+
       <div class="contact-form">
-        <h2>Send us a Message</h2>
-        <form>
+        <h2>Send a WhatsApp Message</h2>
+        <form (ngSubmit)="sendOnWhatsApp()" novalidate>
           <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" placeholder="Your name">
+            <label for="name">Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              [(ngModel)]="form.name"
+              placeholder="Your name"
+              required
+            >
+            <p class="field-error" *ngIf="fieldErrors.name">{{ fieldErrors.name }}</p>
           </div>
           <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Your email">
+            <label for="phone">Phone *</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              [(ngModel)]="form.phone"
+              placeholder="03XXXXXXXXX"
+              required
+            >
+            <p class="field-error" *ngIf="fieldErrors.phone">{{ fieldErrors.phone }}</p>
           </div>
           <div class="form-group">
-            <label for="subject">Subject</label>
-            <input type="text" id="subject" placeholder="Subject">
+            <label for="message">Message *</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              [(ngModel)]="form.message"
+              placeholder="Ask about a dress, size, or an order"
+            ></textarea>
+            <p class="field-error" *ngIf="fieldErrors.message">{{ fieldErrors.message }}</p>
           </div>
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" rows="5" placeholder="Your message"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Send Message</button>
+          <p class="form-error" *ngIf="formError">{{ formError }}</p>
+          <button type="submit" class="btn btn-primary">Open WhatsApp</button>
         </form>
       </div>
     </div>
+
+    <ng-template #confirmation>
+      <div class="contact-confirmation">
+        <h2>WhatsApp is ready</h2>
+        <p>
+          Your message is prepared for MK Studio. If a new chat did not open, tap the button below.
+        </p>
+        <p class="whatsapp-note" *ngIf="!whatsappOpened">
+          Allow pop-ups if your browser blocked the WhatsApp window.
+        </p>
+        <p class="whatsapp-note success" *ngIf="whatsappOpened">
+          WhatsApp should now be open with your message.
+        </p>
+        <button type="button" class="btn btn-primary" (click)="openWhatsApp()">Open WhatsApp again</button>
+        <button type="button" class="btn btn-secondary" (click)="sendAnother()">Write another message</button>
+      </div>
+    </ng-template>
   </div>
 </div>

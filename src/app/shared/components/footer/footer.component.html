@@ -9,9 +9,13 @@
         <p class="tagline">Elegance in Every Thread</p>
         <p>Premium Pakistani eastern wear crafted with refined detail for the modern woman.</p>
         <div class="social-links">
-          <a href="#" class="social-link" aria-label="Instagram">Instagram</a>
-          <a href="#" class="social-link" aria-label="Facebook">Facebook</a>
-          <a href="#" class="social-link" aria-label="Twitter">Twitter</a>
+          <a
+            [href]="instagramUrl"
+            class="social-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="MK Studio on Instagram"
+          >Instagram</a>
         </div>
       </div>
       <div class="footer-section">
@@ -21,14 +25,19 @@
           <li><a routerLink="/shop">Shop</a></li>
           <li><a routerLink="/about">About</a></li>
           <li><a routerLink="/contact">Contact</a></li>
-          <li><a routerLink="/admin/orders">Store Admin</a></li>
         </ul>
       </div>
       <div class="footer-section">
         <h4>Contact</h4>
-        <p>Email: info@mkstudio.com</p>
-        <p>Phone: (555) 123-4567</p>
-        <p>Hours: Mon-Fri 9AM-6PM</p>
+        <p>Online boutique — Cash on Delivery across Pakistan.</p>
+        <p>
+          WhatsApp:
+          <a [href]="whatsappUrl" target="_blank" rel="noopener noreferrer">{{ whatsappDisplay }}</a>
+        </p>
+        <p>
+          Instagram:
+          <a [href]="instagramUrl" target="_blank" rel="noopener noreferrer">@mkstudio.pk</a>
+        </p>
       </div>
     </div>
     <div class="footer-bottom">
